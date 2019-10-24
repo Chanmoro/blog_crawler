@@ -1,0 +1,30 @@
+version: '3'
+services:
+  crawler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: /app/entrypoint.sh
+    working_dir: /app
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=crawler
+      - DB_USER=docker
+      - DB_PASSWORD=docker
+    volumes:
+      - ./app:/app
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:11.2
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=crawler
+    volumes:
+      - postgres_storage:/var/lib/postgresql/data
+
+volumes:
+  postgres_storage:
